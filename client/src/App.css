@@ -1,0 +1,109 @@
+@import url("https://fonts.googleapis.com/css2?family=Lora&display=swap");
+
+* {
+  font-family: "Lora", sans-serif;
+  color: #060707;
+}
+
+th {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.pure-btn {
+  background-color: transparent;
+  border: none;
+}
+
+.p-sm {
+  padding: 5px 15px;
+}
+
+.card-wrapper {
+  border-radius: 50px;
+  background: #eef4f6;
+  box-shadow: 20px 20px 60px #cacfd1, -20px -20px 60px #ffffff;
+}
+
+.card-white-wrapper {
+  width: 100%;
+  min-height: 90vh;
+  border-radius: 50px;
+  background-color: #ffffff;
+  box-shadow: 0 3px 3px rgba(0, 0, 0, 0.3);
+  padding: 15px;
+}
+
+.main-program-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  padding: 25px 25px 25px 225px;
+  border: "1px solid #000";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* form control hover custom */
+.form-control:focus {
+  box-shadow: none;
+}
+
+/* button bootstrap custom */
+.btn-dark:focus {
+  box-shadow: none;
+}
+
+.btn-dark:hover {
+  background-color: transparent;
+}
+
+.nav-btn {
+  background-color: transparent;
+  border: none;
+  color: "#000";
+  padding: 8px 30px;
+  border-radius: 20px;
+}
+
+.nav-btn-active {
+  background-color: #060707;
+  color: "#fff";
+  padding: 8px 30px;
+  border-radius: 20px;
+  transition: all 0.3s ease-in;
+}
+
+.logout-btn {
+  background-color: #060707;
+  color: "#fff";
+  padding: 8px 30px;
+  border-radius: 20px;
+  border: none;
+}
+
+/* landing page style */
+
+.college-section,
+.staff-section {
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.college-section:hover,
+.staff-section:hover {
+  transform: scale(1.1);
+}
+
+/* end landing page style */
+
+/* forbidden page */
+
+.forbidden-btn {
+  border: 1px solid #060707;
+  background-color: transparent;
+  font-size: 22;
+  padding: 10px 20px;
+}
+
+/* forbidden page */
