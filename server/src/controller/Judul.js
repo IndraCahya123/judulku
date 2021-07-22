@@ -1,6 +1,7 @@
 const { User, Comment, DetailJudul, Profile, Judul } = require("../../models");
-
 const joi = require("joi");
+const base64 = require('base64-min')
+const fs = require('fs')
 
 exports.getMyJudul = async (req, res) => {
   try {
@@ -239,11 +240,49 @@ exports.updateJudulByMhs = async (req, res) => {
       dospemId: body.dospemId,
     };
 
-    await Judul.update(updatedData, {
-      where: {
-        id: judulId,
-      },
-    });
+    if (body.editForDospem == "true") {
+      await Judul.update(updatedData, {
+        where: {
+          id: judulId,
+        },
+      });
+
+      await DetailJudul.update(
+        {
+          dospemStatus: null,
+        },
+        {
+          where: {
+            judulId,
+          },
+        }
+      );
+    } else if (body.editForKaprodi == "true") {
+      await Judul.update(updatedData, {
+        where: {
+          id: judulId,
+        },
+      });
+
+      await DetailJudul.update(
+        {
+          kaprodiStatus: null,
+          value: null,
+          score: null,
+        },
+        {
+          where: {
+            judulId,
+          },
+        }
+      );
+    } else {
+      await Judul.update(updatedData, {
+        where: {
+          id: judulId,
+        },
+      });
+    }
 
     res.send({
       message: "Success to update judul",
@@ -313,11 +352,14 @@ exports.dospemGetJudul = async (req, res) => {
         },
       });
 
+      const fileBase64 = base64.encodeFile(__dirname + `/files/${getAllJudul[i].judul}`)
+
       judulDetails.push({
         ...getAllJudul[i].dataValues,
         judulUrl: process.env.file_url + getAllJudul[i].judul,
         mahasiswa,
         detail,
+        judulBase64 : fileBase64
       });
     }
 
@@ -373,6 +415,7 @@ exports.updateJudulByDospem = async (req, res) => {
         },
         {
           model: Comment,
+          as: "comments"
         },
       ],
     });
@@ -470,9 +513,21 @@ exports.kaprodiGetJudul = async (req, res) => {
 
     //search judul
     const getJudul = await Judul.findAll({
-      include: {
+      include: [
+      {
         model: DetailJudul,
       },
+      {
+        model: Comment,
+        as: "comments",
+        include: {
+          model: User,
+          include: {
+            model: Profile,
+          }
+        }
+      }
+      ],
       order: [["updatedAt", "DESC"]],
     });
 
@@ -509,6 +564,7 @@ exports.kaprodiGetJudul = async (req, res) => {
           },
           {
             model: Comment,
+            as: "comments",
             order: [["updatedAt", "DESC"]],
           },
         ],
@@ -517,10 +573,13 @@ exports.kaprodiGetJudul = async (req, res) => {
         },
       });
 
+      const fileBase64 = base64.encodeFile(__dirname + `/files/${getAllJudul[i].judul}`)
+
       allDataJudul.push({
         ...getJudul[i].dataValues,
         mahasiswa,
         dospem,
+        judulBase64 : fileBase64
       });
     }
 
@@ -543,7 +602,7 @@ exports.kaprodiGetJudul = async (req, res) => {
       return (
         judul.DetailJudul.dospemStatus == "diterima" &&
         judul.DetailJudul.value != null &&
-        judul.DetailJudul.score != null
+        (judul.DetailJudul.score != null)
       );
     });
 
@@ -589,13 +648,14 @@ exports.kaprodiSetValue = async (req, res) => {
 
     await DetailJudul.update(
       {
-        value: body.value
-      }, 
-      {
-      where: {
-        judulId,
+        value: body.value,
       },
-    });
+      {
+        where: {
+          judulId,
+        },
+      }
+    );
 
     res.send({
       message: "Judul diupdate",
@@ -611,3 +671,321 @@ exports.kaprodiSetValue = async (req, res) => {
     });
   }
 };
+
+exports.kaprodiSetScore = async (req, res) => {
+  try {
+    const userLogged = req.userId.id;
+    const { body } = req;
+
+    const user = await User.findOne({
+      where: {
+        id: userLogged,
+      },
+      attributes: {
+        exclude: ["password"],
+      },
+    });
+
+    if (user.role !== "kaprodi") {
+      return res.status(403).send({
+        message: "Forbidden activity",
+      });
+    }
+
+    const data = JSON.parse(body.data);
+
+    for (let i = 0; i < data.length; i++) {
+      await DetailJudul.update(
+        {
+          score: data[i].score,
+        },
+        {
+          where: {
+            id: data[i].id,
+          },
+        }
+      );
+    }
+
+    res.send({
+      message: "Success to set score to judul",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      status: "error",
+      message: "Server Error",
+    });
+  }
+};
+
+exports.updateJudulByKaprodi = async (req, res) => {
+  try {
+    const userLogged = req.userId.id;
+    const { judulId } = req.params;
+    const { body } = req;
+
+    const judul = await Judul.findOne({
+      where: {
+        id: judulId,
+      },
+      include: [
+        {
+          model: DetailJudul,
+        },
+        {
+          model: Comment,
+          as:"comments"
+        },
+      ],
+    });
+
+    if (!judul) {
+      return res.status(404).send({
+        message: "Judul not found",
+      });
+    }
+
+    let schema;
+    if (body.comment == "") {
+      schema = joi.object({
+        kaprodiResponse: joi.required(),
+        comment: joi.allow(),
+      });
+    } else {
+      schema = joi.object({
+        kaprodiResponse: joi.required(),
+        comment: joi.string().min(10).required(),
+      });
+    }
+
+    const { error } = schema.validate(body);
+
+    if (error)
+      return res.status(400).send({
+        status: "There's error in your data input",
+        message: error.details[0].message,
+      });
+
+    if (body.comment == "") {
+      await DetailJudul.update(
+        {
+          kaprodiStatus: body.kaprodiResponse,
+        },
+        {
+          where: {
+            id: judul.DetailJudul.id,
+          },
+        }
+      );
+    } else {
+      await DetailJudul.update(
+        {
+          kaprodiStatus: body.kaprodiResponse,
+        },
+        {
+          where: {
+            id: judul.DetailJudul.id,
+          },
+        }
+      );
+
+      await Comment.create({
+        judulId,
+        userId: userLogged,
+        message: body.comment,
+      });
+    }
+
+    res.send({
+      message: "Berhasil diupdate",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      status: "error",
+      message: "Server Error",
+    });
+  }
+}
+
+exports.downloadJudul = (req, res) => {
+  try {
+    const {filename} = req.params
+
+    const fileBase64 = base64.encodeFile(__dirname + `/files/${filename}`)
+
+    res.send({
+      data: fileBase64
+    })
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      status: "error",
+      message: "Server Error",
+    });
+  }
+}
+
+exports.getJudulDetail = async (req, res) => {
+  try {
+    const { judulId } = req.params;
+
+    const judul = await Judul.findOne({
+      where: {
+        id: judulId,
+      },
+      include: [
+        {
+          model: DetailJudul,
+        },
+        {
+          model: Comment,
+          as:"comments",
+          include: {
+            model: User,
+            include: {
+              model: Profile
+            }
+          }
+        },
+      ],
+    });
+
+    if (!judul) {
+      return res.status(404).send({
+        message: "Judul not found",
+      });
+    }
+
+    const mahasiswa = await User.findOne({
+      where: {
+        id: judul.userId
+      },
+      attributes:{
+        exclude: ["password"]
+      },
+      include: {
+        model: Profile
+      }
+    });
+
+    const dospem = await User.findOne({
+      where: {
+        id: judul.dospemId
+      },
+      attributes:{
+        exclude: ["password"]
+      },
+      include: {
+        model: Profile
+      }
+    });
+
+    res.send({
+      status: "Success",
+      data: {
+        judul: {
+          ...judul.dataValues,
+          mahasiswa,
+          dospem
+        }
+      }
+    })
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      status: "error",
+      message: "Server Error",
+    });
+  }
+}
+
+exports.baakGetJudul = async (req, res) => {
+  try {
+    const getJudul = await Judul.findAll({
+      include: [
+      {
+        model: DetailJudul,
+      },
+      {
+        model: Comment,
+        as: "comments",
+        include: {
+          model: User,
+          include: {
+            model: Profile,
+          }
+        }
+      }
+      ],
+      order: [["updatedAt", "DESC"]],
+    });
+
+    if (getJudul.length == 0) {
+      return res.send({
+        data: {
+          judul: getJudul,
+        },
+      });
+    }
+
+    let allDataJudul = [];
+
+    for (let i = 0; i < getJudul.length; i++) {
+      const mahasiswa = await User.findOne({
+        where: {
+          id: getJudul[i].userId,
+        },
+        include: {
+          model: Profile,
+        },
+        attributes: {
+          exclude: ["password"],
+        },
+      });
+
+      const dospem = await User.findOne({
+        where: {
+          id: getJudul[i].dospemId,
+        },
+        include: [
+          {
+            model: Profile,
+          },
+          {
+            model: Comment,
+            as: "comments",
+            order: [["updatedAt", "DESC"]],
+          },
+        ],
+        attributes: {
+          exclude: ["password"],
+        },
+      });
+
+      const fileBase64 = base64.encodeFile(__dirname + `/files/${getJudul[i].judul}`)
+
+      allDataJudul.push({
+        ...getJudul[i].dataValues,
+        mahasiswa,
+        dospem,
+        judulBase64 : fileBase64
+      });
+    }
+
+    res.send({
+      status: "Success",
+      data: {
+        judul: allDataJudul
+      }
+    })
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      status: "error",
+      message: "Server Error",
+    });
+  }
+}

@@ -25,7 +25,7 @@ function DashboardBaak() {
           setNavActive({
             type: 'PRINT',
           })
-          navigate.push('/laporan-judul-baak')
+          navigate.push('/judul-laporan-baak')
         }}
       >
         <DownloadIcon width="350px" height="300px" />

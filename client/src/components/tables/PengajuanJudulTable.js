@@ -10,7 +10,6 @@ import {
   faInfoCircle,
 } from '@fortawesome/free-solid-svg-icons'
 import { useMutation, useQuery } from 'react-query'
-import { useHistory } from 'react-router'
 
 import { BaseUrl } from '../../api/config'
 
@@ -19,7 +18,6 @@ import AddData from '../buttons/AddData'
 import Response from '../Response'
 
 function PengajuanJudulTable(props) {
-  const navigate = useHistory()
 
   const { changeForm, setChangeForm } = props
 
@@ -117,15 +115,6 @@ function PengajuanJudulTable(props) {
                         }}
                       >
                         <FontAwesomeIcon icon={faEdit} title="Edit" />
-                      </button>
-                      <button type="button" className="edit-mhs-btn pure-btn">
-                        <a
-                          href={item.judulUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <FontAwesomeIcon icon={faEye} title="View" />
-                        </a>
                       </button>
                       <button
                         type="button"

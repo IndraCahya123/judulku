@@ -30,12 +30,6 @@ function EditComment(props) {
   const success = () => {
     refetch();
     props.onHide();
-    setChangeForm({
-        ...changeForm,
-        change: false,
-        seeDetail: false,
-        dataDetailJudul: null
-    })
   };
 
   return (

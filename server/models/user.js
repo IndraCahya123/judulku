@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Comment, {
         onDelete: 'Cascade',
         onUpdate: 'Cascade',
+        as: "comments"
       })
     }
   }

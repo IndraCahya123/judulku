@@ -112,7 +112,7 @@ function PenilaianForm(props) {
                       {options.map((option) => {
                         return (
                           <>
-                            <option selected={option == form[`kriteria${index}`].value ? true : false} value={option}>{option}</option>
+                            <option selected={isEdit ? (option == form[`kriteria${index}`].value ? true : false) : false} value={option}>{option}</option>
                           </>
                         );
                       })}

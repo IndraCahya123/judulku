@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faEye, faComments } from '@fortawesome/free-solid-svg-icons'
+import { faDownload, faComments } from '@fortawesome/free-solid-svg-icons'
 
 function DospemGuide() {
   return (
@@ -12,7 +12,7 @@ function DospemGuide() {
       <ol>
         <li>
           Untuk melihat file Pengajuan Judul Skripsi, silahkan tekan tombol{' '}
-          <FontAwesomeIcon icon={faEye} /> pada tabel di halaman judul
+          <FontAwesomeIcon icon={faDownload} /> pada tabel di halaman judul
         </li>
         <li>
           Setelah melihat file yang ada, silahkan klik tombol{' '}

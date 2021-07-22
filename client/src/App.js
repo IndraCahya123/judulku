@@ -22,6 +22,7 @@ import Guide from "./pages/Mahasiswa/Guide";
 import PengajuanJudul from "./pages/Mahasiswa/PengajuanJudul";
 import JudulDospem from "./pages/Dospem/JudulDospem";
 import JudulKaprodi from "./pages/Kaprodi/JudulKaprodi";
+import JudulBaak from "./pages/BAAK/JudulBaak";
 
 import { AdminNavContextProvider } from "./context/navContext/adminNavContext";
 import { MhsNavContextProvider } from "./context/navContext/mhsNavContext";
@@ -133,6 +134,11 @@ function App() {
                         exact
                         path="/judul-laporan-kaprodi"
                         component={JudulKaprodi}
+                      />
+                      <AuthRoute
+                        exact
+                        path="/judul-laporan-baak"
+                        component={JudulBaak}
                       />
                     </Switch>
                   </AnimatePresence>

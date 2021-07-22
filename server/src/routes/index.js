@@ -7,9 +7,10 @@ const { authentication } = require('../middlewares/Auth')
 const { fileUpload } = require('../middlewares/UploadFile')
 
 //auth routes
-const { login, checkAuth } = require('../controller/Auth')
+const { loginMhs, loginStaff, checkAuth } = require('../controller/Auth')
 
-router.post('/login', login)
+router.post('/login/mhs', loginMhs)
+router.post('/login/staff', loginStaff)
 router.get('/check-auth', authentication, checkAuth)
 
 //user routes
@@ -72,12 +73,20 @@ const {
     deleteJudul,
     updateJudulByMhs,
     updateJudulByDospem,
-    kaprodiSetValue
+    updateJudulByKaprodi,
+    kaprodiSetValue,
+    kaprodiSetScore,
+    getJudulDetail,
+    baakGetJudul,
+    downloadJudul
 } = require('../controller/Judul')
 
 router.get('/my-judul', authentication, getMyJudul)
+// router.get('/judul/data/:filename', downloadJudul)
 router.get('/judul/dospem', authentication, dospemGetJudul)
 router.get('/judul/kaprodi', authentication, kaprodiGetJudul)
+router.get('/judul/detail/:judulId', authentication, getJudulDetail)
+router.get('/judul/baak', authentication, baakGetJudul)
 router.post('/judul', authentication, fileUpload('pdf', false), addJudul)
 router.patch(
     '/judul/mhs/:id',
@@ -87,6 +96,8 @@ router.patch(
 )
 router.patch('/judul/:judulId/dospem', authentication, updateJudulByDospem)
 router.patch('/judul/:judulId/kaprodi', authentication, kaprodiSetValue)
+router.patch('/judul/:judulId/kaprodi/set-response', authentication, updateJudulByKaprodi)
+router.patch('/judul/kaprodi/set-score', authentication, kaprodiSetScore)
 router.delete('/judul/:id', authentication, deleteJudul)
 
 //Comment route

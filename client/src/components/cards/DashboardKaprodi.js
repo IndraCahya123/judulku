@@ -26,7 +26,7 @@ function DashboardKaprodi() {
           setNavActive({
             type: 'KAPRODI_RES',
           })
-          navigate.push('/laporan-judul-kaprodi')
+          navigate.push('/judul-laporan-kaprodi')
         }}
       >
         <AnalizeIcon width="350px" height="300px" />

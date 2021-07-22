@@ -41,20 +41,22 @@ function JudulNoValueKaprodiTable(props) {
                   <td>{date.toDateString(item.updatedAt).substring(3)}</td>
                   <td className="d-flex justify-content-around">
                     <button type="button" className="edit-mhs-btn pure-btn">
-                      <a href={item.judulUrl} target="_blank" rel="noreferrer">
+                      <a href={`data:application/pdf;base64,${item.judulBase64}`} target="_blank" rel="noreferrer">
                         <FontAwesomeIcon icon={faDownload} title="Download" />
                       </a>
                     </button>
                     <button
                       type="button"
                       className="edit-mhs-btn pure-btn"
-                      // onClick={() =>
-                      //   setChangeForm({
-                      //     ...changeForm,
-                      //     seeDetail: true,
-                      //     dataDetailJudul: item,
-                      //   })
-                      // }
+                      onClick={() =>
+                        setChangeForm({
+                          ...changeForm,
+                          change: false,
+                          seeReport: true,
+                          seeDetail: true,
+                          dataDetailJudul: item,
+                        })
+                      }
                     >
                       <FontAwesomeIcon
                         icon={faInfoCircle}

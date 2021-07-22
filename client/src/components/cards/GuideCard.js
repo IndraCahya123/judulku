@@ -4,6 +4,7 @@ import { Redirect } from 'react-router'
 
 import MhsGuide from './MhsGuide'
 import DospemGuide from './DospemGuide'
+import BaakGuide from './BaakGuide'
 
 import { UserContext } from '../../context/userContext'
 
@@ -29,6 +30,9 @@ const Content = (props) => {
 
     case 'dospem':
       return <DospemGuide />
+
+    case 'baak':
+      return <BaakGuide />
 
     default:
       return <Redirect to="/" />

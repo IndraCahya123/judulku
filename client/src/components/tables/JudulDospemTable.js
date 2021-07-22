@@ -6,6 +6,7 @@ import {
   faDownload,
   faInfoCircle,
 } from "@fortawesome/free-solid-svg-icons";
+import Base64 from 'Base64';
 
 import Loading from "../Loading";
 import AddData from "../buttons/AddData";
@@ -15,6 +16,12 @@ function JudulDospemTable(props) {
   const { changeForm, setChangeForm, data, isFetching } = props;
 
   const date = new Date();
+
+  const getJudulFile = (data) => {
+    const base64 = Base64.atob(data);
+    
+    return base64
+  }
 
   if (isFetching) {
     return <Loading />;
@@ -64,17 +71,23 @@ function JudulDospemTable(props) {
                             change: true,
                             isEdit: true,
                             dataEdit: item,
-                          })
+                          });
                         }}
+                        disabled={
+                          item.detail.dospemStatus == null ||
+                          item.detail.dospemStatus === "diterima"
+                            ? true
+                            : false
+                        }
                       >
                         <FontAwesomeIcon icon={faEdit} title="Edit" />
                       </button>
-                      <button type="button" className="edit-mhs-btn pure-btn">
-                        <a
-                          href={item.judulUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                        >
+                      <button
+                        type="button"
+                        className="edit-mhs-btn pure-btn"
+                        onClick={() => getJudulFile(item.judulBase64)}
+                      >
+                        <a href={`data:application/pdf;base64,${item.judulBase64}`} download={`${item.judul}.pdf`}>
                           <FontAwesomeIcon icon={faDownload} title="Download" />
                         </a>
                       </button>
@@ -101,8 +114,12 @@ function JudulDospemTable(props) {
                           setChangeForm({
                             ...changeForm,
                             change: true,
-                            dataEdit: item
+                            isEdit: false,
+                            dataEdit: item,
                           })
+                        }
+                        disabled={
+                          item.detail.dospemStatus === "diterima" ? true : false
                         }
                       >
                         <FontAwesomeIcon icon={faComment} title="Beri Respon" />

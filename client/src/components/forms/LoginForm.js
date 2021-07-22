@@ -39,9 +39,13 @@ function LoginForm(props) {
       },
     }
 
-    const res = await BaseUrl.post('/login', form, config)
-
-    handleSubmit(res)
+    if (role === 'college') {
+      const res = await BaseUrl.post('/login/mhs', form, config)
+      handleSubmit(res)
+    } else {
+      const res = await BaseUrl.post('/login/staff', form, config)
+      handleSubmit(res)
+    }
   })
 
   const handleSubmit = (res) => {

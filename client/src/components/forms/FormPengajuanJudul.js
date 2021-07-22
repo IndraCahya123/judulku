@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import { Form } from 'react-bootstrap'
 import Select from 'react-select'
 import { useMutation, useQuery } from 'react-query'
@@ -23,7 +24,7 @@ function FormPengajuanJudul(props) {
     pdf: null,
     dospemId: 0,
   })
-
+console.log(dataEdit);
   const [options, setOptions] = useState({
     data: [],
   })
@@ -90,19 +91,55 @@ function FormPengajuanJudul(props) {
   const updateJudul = useMutation('UpdateJudulCache', async () => {
     const body = new FormData()
 
-    body.append('pdf', form.pdf)
-    body.append('dospemId', form.dospemId)
-
     const config = {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     }
 
-    await BaseUrl.patch(`/judul/mhs/${dataEdit.id}`, body, config)
+    if (dataEdit.detail.dospemStatus !== 'diterima') {
+      body.append('pdf', form.pdf)
+      body.append('dospemId', form.dospemId)
+      body.append('editForDospem', true)
+      body.append('editForKaprodi', false)
 
-    setChangeForm({ ...changeForm, change: false })
-  })
+      await BaseUrl.patch(`/judul/mhs/${dataEdit.id}`, body, config)
+    } else if (dataEdit.detail.dospemStatus === 'diterima' && dataEdit.detail.kaprodiStatus !== 'diterima') {
+      body.append('pdf', form.pdf)
+      body.append('dospemId', form.dospemId)
+      body.append('editForDospem', false)
+      body.append('editForKaprodi', true)
+
+      await BaseUrl.patch(`/judul/mhs/${dataEdit.id}`, body, config)
+    } else {
+      body.append('pdf', form.pdf)
+      body.append('dospemId', form.dospemId)
+      body.append('editForDospem', false)
+      body.append('editForKaprodi', false)
+
+      await BaseUrl.patch(`/judul/mhs/${dataEdit.id}`, body, config)
+    }
+
+    setChangeForm({ ...changeForm, change: false, dataEdit: null })
+  });
+
+  const confirmation = () => {
+    let message
+
+    if (dataEdit.detail.dospemStatus !== 'diterima') {
+      message = confirm('Yakin ingin mengubah judul ? hal ini dapat mereset ulang data penilaian dari dosen pembimbing.')
+    } else if (dataEdit.detail.dospemStatus === 'diterima' && dataEdit.detail.kaprodiStatus !== 'diterima') {
+      message = confirm('Yakin ingin mengubah judul ? hal ini dapat mereset ulang data penilaian dari Kepala Program Studi (Kaprodi).')
+    } else {
+      message = confirm('Yakin ingin mengubah judul ?')
+    }
+
+    if (message) {
+      updateJudul.mutate()
+    } else {
+      alert('Batal untuk mengubahjudul')
+    }
+  }
 
   if (isFetching) {
     return <Loading />
@@ -178,7 +215,7 @@ function FormPengajuanJudul(props) {
               <Submit
                 title="Kirim"
                 action={() =>
-                  isEdit ? updateJudul.mutate() : addNewJudul.mutate()
+                  isEdit ? confirmation() : addNewJudul.mutate()
                 }
                 style={{ width: '30%' }}
               />

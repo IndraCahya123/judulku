@@ -20,11 +20,6 @@ function CommentsCard(props) {
   const deleteComment = useMutation('DeleteCommentCache', async () => {
     await BaseUrl.delete(`/comment/${comment.id}`)
     refetch()
-    setChangeForm({
-      ...changeForm,
-      seeDetail: false,
-      dataDetailJudul: null
-    })
   })
 
   const confirmDelete = () => {

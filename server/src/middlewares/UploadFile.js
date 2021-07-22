@@ -4,7 +4,7 @@ const { default: slugify } = require('slugify')
 exports.fileUpload = (pdf, isFromEdit) => {
   const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'files') //lokasi penyimpan file
+      cb(null, 'src/controller/files') //lokasi penyimpan file
     },
     filename: function (req, file, cb) {
       cb(null, Date.now() + '-' + slugify(file.originalname)) //rename nama file by date now + userId + nama original

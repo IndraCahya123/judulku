@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       Judul.hasMany(models.Comment, {
         onDelete: 'Cascade',
         onUpdate: 'Cascade',
+        as: "comments"
       })
     }
   }

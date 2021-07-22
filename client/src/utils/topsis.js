@@ -119,5 +119,14 @@ export const topsis = (data, bobot) => {
     nilaiAkhir.push(parseFloat(hasil.toPrecision(3)));
   }
 
-  return nilaiAkhir;
+  const AnalyzedData = {
+    matriks : arrayData,
+    matriksTernormalisasi: matriksNormalisasi,
+    matriksNormalisasiTerbobot: matriksNormalisasiTerbobot,
+    jarakIdealNegatif,
+    jarakIdealPositif,
+    nilaiAkhir
+  }
+
+  return AnalyzedData;
 }

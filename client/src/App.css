@@ -5,6 +5,11 @@
   color: #060707;
 }
 
+.modal-size-custom{
+  width: 90%;
+  height: 90%;
+}
+
 th {
   text-align: center;
   vertical-align: middle;
@@ -27,11 +32,12 @@ th {
 
 .card-white-wrapper {
   width: 100%;
-  min-height: 90vh;
+  height: 90vh;
   border-radius: 50px;
   background-color: #ffffff;
   box-shadow: 0 3px 3px rgba(0, 0, 0, 0.3);
   padding: 15px;
+  overflow: auto;
 }
 
 .main-program-wrapper {
