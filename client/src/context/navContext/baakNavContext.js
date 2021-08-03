@@ -4,6 +4,7 @@ export const BaakNavContext = createContext();
 
 const initialValue = {
   home: true,
+  guide: false,
   print: false,
   profile: false,
 };

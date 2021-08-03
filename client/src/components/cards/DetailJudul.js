@@ -48,10 +48,12 @@ function DetailJudul(props) {
           }}
           onClick={() => {
             setChangeForm({
+              ...changeForm,
               change: false,
               isEdit: false,
               dataEdit: null,
               seeDetail: false,
+              seeReport: false,
               dataDetailJudul: null,
             });
           }}

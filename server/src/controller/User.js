@@ -490,7 +490,7 @@ exports.staffRegister = async (req, res) => {
       password: joi.string().min(8).max(50).required(),
       role: joi.string().required(),
       name: joi.string().min(6).max(50).required(),
-      nidn: joi.string().min(9).max(15).required(),
+      nidn: joi.allow(),
     })
 
     const { error } = schema.validate(body)
@@ -524,15 +524,6 @@ exports.staffRegister = async (req, res) => {
         exclude: ['password', 'createdAt', 'updatedAt'],
       },
     })
-
-    const checkEmail = getUsers.filter((user) => user.email === body.email)
-
-    if (checkEmail.length > 0) {
-      return res.status(417).send({
-        status: 'Failed',
-        message: 'Email has been registered',
-      })
-    }
 
     const hashedPassword = await bcrypt.hash(body.password, 10)
 

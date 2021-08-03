@@ -25,8 +25,7 @@ function AddNewUserForm(props) {
       form.email === '' ||
       form.password === '' ||
       form.role === '' ||
-      form.name === '' ||
-      form.nidn === ''
+      form.name === '' 
     ) {
       return true
     } else {

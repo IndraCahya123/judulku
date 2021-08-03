@@ -60,7 +60,7 @@ export const topsis = (data, bobot) => {
   for (let rows = 0; rows < matriksNormalisasi.length; rows++) {
     matriksNormalisasiTerbobot[rows] = [];
     for (let cols = 0; cols < matriksNormalisasi[rows].length; cols++) {
-      const hasilKali = matriksNormalisasi[rows][cols] * bobot[rows];
+      const hasilKali = matriksNormalisasi[rows][cols] * bobot[cols];
       matriksNormalisasiTerbobot[rows].push(hasilKali);
     }
   }
@@ -94,8 +94,8 @@ export const topsis = (data, bobot) => {
     let hasilPenjumlahanKuadrat = 0;
     for (let cols = 0; cols < matriksNormalisasiTerbobot[rows].length; cols++) {
       hasilPenjumlahanKuadrat +=
-        (nilaiIdealPositif[rows] - matriksNormalisasiTerbobot[rows][cols]) *
-        (nilaiIdealPositif[rows] - matriksNormalisasiTerbobot[rows][cols]);
+        (nilaiIdealPositif[cols] - matriksNormalisasiTerbobot[rows][cols]) *
+        (nilaiIdealPositif[cols] - matriksNormalisasiTerbobot[rows][cols]);
     }
     jarakIdealPositif.push(Math.sqrt(hasilPenjumlahanKuadrat));
   }
@@ -105,8 +105,8 @@ export const topsis = (data, bobot) => {
     let hasilPenjumlahanKuadrat = 0;
     for (let cols = 0; cols < matriksNormalisasiTerbobot[rows].length; cols++) {
       hasilPenjumlahanKuadrat +=
-        (matriksNormalisasiTerbobot[rows][cols] - nilaiIdealNegatif[rows]) *
-        (matriksNormalisasiTerbobot[rows][cols] - nilaiIdealNegatif[rows]);
+        (matriksNormalisasiTerbobot[rows][cols] - nilaiIdealNegatif[cols]) *
+        (matriksNormalisasiTerbobot[rows][cols] - nilaiIdealNegatif[cols]);
     }
     jarakIdealNegatif.push(Math.sqrt(hasilPenjumlahanKuadrat));
   }

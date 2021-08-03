@@ -5,6 +5,8 @@ import { Redirect } from 'react-router'
 import MhsGuide from './MhsGuide'
 import DospemGuide from './DospemGuide'
 import BaakGuide from './BaakGuide'
+import KaprodiGuide from './KaprodiGuide'
+import AdminGuide from './AdminGuide'
 
 import { UserContext } from '../../context/userContext'
 
@@ -25,11 +27,17 @@ function GuideCard() {
 const Content = (props) => {
   const { role } = props
   switch (role) {
+    case 'admin':
+      return <AdminGuide />
+
     case 'mahasiswa':
       return <MhsGuide />
 
     case 'dospem':
       return <DospemGuide />
+
+    case 'kaprodi':
+      return <KaprodiGuide />
 
     case 'baak':
       return <BaakGuide />

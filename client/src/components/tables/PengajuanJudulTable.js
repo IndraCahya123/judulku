@@ -1,59 +1,58 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
-import { useState } from 'react'
-import { Table } from 'react-bootstrap'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useState } from "react";
+import { Table } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faTrash,
   faPlusCircle,
   faEdit,
   faEye,
   faInfoCircle,
-} from '@fortawesome/free-solid-svg-icons'
-import { useMutation, useQuery } from 'react-query'
+} from "@fortawesome/free-solid-svg-icons";
+import { useMutation, useQuery } from "react-query";
 
-import { BaseUrl } from '../../api/config'
+import { BaseUrl } from "../../api/config";
 
-import Loading from '../Loading'
-import AddData from '../buttons/AddData'
-import Response from '../Response'
+import Loading from "../Loading";
+import AddData from "../buttons/AddData";
+import Response from "../Response";
 
 function PengajuanJudulTable(props) {
-
-  const { changeForm, setChangeForm } = props
+  const { changeForm, setChangeForm } = props;
 
   const [data, setData] = useState({
     judul: [],
-  })
+  });
 
   const { isFetching, refetch } = useQuery(
-    'GetAllJudulUserData',
+    "GetAllJudulUserData",
     async () => {
-      const res = await BaseUrl.get('/my-judul')
+      const res = await BaseUrl.get("/my-judul");
       setData({
         judul: res.data.data.judul,
-      })
+      });
     },
-    { refetchOnWindowFocus: false },
-  )
+    { refetchOnWindowFocus: false }
+  );
 
-  const deleteJudul = useMutation('DeleteKaprodiCache', async (id) => {
-    await BaseUrl.delete(`/judul/${id}`)
-    refetch()
-  })
+  const deleteJudul = useMutation("DeleteKaprodiCache", async (id) => {
+    await BaseUrl.delete(`/judul/${id}`);
+    refetch();
+  });
 
   const confirmDelete = (id) => {
     // eslint-disable-next-line no-restricted-globals
-    const confirmation = confirm(`Hapus Judul dengan id ${id} ?`)
+    const confirmation = confirm(`Hapus Judul dengan id ${id} ?`);
 
     if (confirmation) {
-      deleteJudul.mutate(id)
+      deleteJudul.mutate(id);
     } else {
-      alert('Judul tidak dihapus')
+      alert("Judul tidak dihapus");
     }
-  }
+  };
 
   if (isFetching) {
-    return <Loading />
+    return <Loading />;
   } else {
     if (data.judul.length === 0) {
       return (
@@ -61,13 +60,13 @@ function PengajuanJudulTable(props) {
           disableButton={false}
           action={() => setChangeForm({ ...changeForm, change: true })}
         />
-      )
+      );
     } else {
       return (
         <div className="table-kaprodi-data d-flex flex-column my-3">
           <div className="criteria-header d-flex justify-content-between align-items-center">
             <span
-              style={{ fontSize: 25, fontWeight: 'bold', marginBottom: 15 }}
+              style={{ fontSize: 25, fontWeight: "bold", marginBottom: 15 }}
             >
               Data Judul yang Diajukan
             </span>
@@ -80,7 +79,7 @@ function PengajuanJudulTable(props) {
               <FontAwesomeIcon icon={faPlusCircle} style={{ marginLeft: 5 }} />
             </button>
           </div>
-          <hr className="w-100" style={{ marginTop: '-10px' }} />
+          <hr className="w-100" style={{ marginTop: "-10px" }} />
           <Table striped bordered hover>
             <thead>
               <tr>
@@ -99,8 +98,12 @@ function PengajuanJudulTable(props) {
                     <td className="text-center">{index + 1}</td>
                     <td>{item.judul}</td>
                     <td>{item.dospem.Profile.name}</td>
-                    <td><Response response={item.detail.dospemStatus} /></td>
-                    <td><Response response={item.detail.kaprodiStatus} /></td>
+                    <td>
+                      <Response response={item.detail.dospemStatus} />
+                    </td>
+                    <td>
+                      <Response response={item.detail.kaprodiStatus} />
+                    </td>
                     <td className="d-flex justify-content-around">
                       <button
                         type="button"
@@ -111,8 +114,14 @@ function PengajuanJudulTable(props) {
                             change: true,
                             isEdit: true,
                             dataEdit: item,
-                          })
+                          });
                         }}
+                        disabled={
+                          item.detail.dospemStatus === "ditolak" ||
+                          item.detail.kaprodiStatus === "ditolak"
+                            ? true
+                            : false
+                        }
                       >
                         <FontAwesomeIcon icon={faEdit} title="Edit" />
                       </button>
@@ -141,14 +150,14 @@ function PengajuanJudulTable(props) {
                       </button>
                     </td>
                   </tr>
-                )
+                );
               })}
             </tbody>
           </Table>
         </div>
-      )
+      );
     }
   }
 }
 
-export default PengajuanJudulTable
+export default PengajuanJudulTable;

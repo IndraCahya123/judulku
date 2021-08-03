@@ -8,6 +8,10 @@ body {
   background-color: #EEF4F6;
 }
 
+input::-ms-reveal{
+  display: inline;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

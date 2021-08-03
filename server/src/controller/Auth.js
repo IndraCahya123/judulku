@@ -32,13 +32,6 @@ exports.loginMhs = async (req, res) => {
       },
     })
 
-    if (user.role !== 'mahasiswa') {
-      return res.status(403).send({
-        status: "Failed",
-        message: "This is login for Mahasiswa"
-      })
-    }
-
     //if user not found
     if (!user) {
       return res.status(404).send({
@@ -55,6 +48,13 @@ exports.loginMhs = async (req, res) => {
       return res.status(404).send({
         status: 'Failed',
         message: 'Invalid email or password',
+      })
+    }
+
+    if (user.role !== 'mahasiswa') {
+      return res.status(403).send({
+        status: "Failed",
+        message: "This is login for Mahasiswa"
       })
     }
 
@@ -115,13 +115,6 @@ exports.loginStaff = async (req, res) => {
       },
     })
 
-    if (user.role === 'mahasiswa') {
-      return res.status(403).send({
-        status: "Failed",
-        message: "This is login for Staff"
-      })
-    }
-
     //if user not found
     if (!user) {
       return res.status(404).send({
@@ -138,6 +131,13 @@ exports.loginStaff = async (req, res) => {
       return res.status(404).send({
         status: 'Failed',
         message: 'Invalid email or password',
+      })
+    }
+    
+    if (user.role === 'mahasiswa') {
+      return res.status(403).send({
+        status: "Failed",
+        message: "This is login for Staff"
       })
     }
 

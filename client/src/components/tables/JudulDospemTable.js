@@ -75,7 +75,8 @@ function JudulDospemTable(props) {
                         }}
                         disabled={
                           item.detail.dospemStatus == null ||
-                          item.detail.dospemStatus === "diterima"
+                          item.detail.dospemStatus === "diterima" ||
+                          item.detail.dospemStatus === "ditolak"
                             ? true
                             : false
                         }

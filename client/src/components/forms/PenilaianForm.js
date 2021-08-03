@@ -63,7 +63,6 @@ function PenilaianForm(props) {
   });
 
   const onSubmit = (e) => {
-    e.preventDefault()
     setJudulValue.mutate();
   };
 
@@ -126,7 +125,7 @@ function PenilaianForm(props) {
                 {setJudulValue?.error?.response?.data?.message}
               </p>
             )}
-            <Submit title="Simpan" action={(e) => onSubmit(e)} load={setJudulValue.isLoading} />
+            <Submit title="Simpan" style={{ marginTop: 30 }} action={(e) => onSubmit(e)} load={setJudulValue.isLoading} />
           </Form.Row>
         </Form>
       </div>

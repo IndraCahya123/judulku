@@ -5,6 +5,7 @@ import { useContext } from 'react'
 import { BaakNavContext } from '../../context/navContext/baakNavContext'
 
 import DownloadIcon from '../../assets/Download'
+import GuideIcon from '../../assets/Guide'
 
 function DashboardBaak() {
   const navigate = useHistory()
@@ -31,6 +32,22 @@ function DashboardBaak() {
         <DownloadIcon width="350px" height="300px" />
         <span style={{ fontSize: 32, fontWeight: 'bolder', marginTop: 10 }}>
           Download Judul
+        </span>
+      </motion.div>
+      <motion.div
+        whileHover={{ scale: 1.1 }}
+        className="user-data-section d-flex flex-column align-items-center"
+        style={{ cursor: 'pointer' }}
+        onClick={() => {
+          setNavActive({
+            type: 'GUIDE',
+          })
+          navigate.push('/guide')
+        }}
+      >
+        <GuideIcon width="350px" height="300px" />
+        <span style={{ fontSize: 32, fontWeight: 'bolder', marginTop: 10 }}>
+          Panduan
         </span>
       </motion.div>
     </motion.div>

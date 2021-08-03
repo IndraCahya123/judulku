@@ -1,7 +1,7 @@
 const { User, Comment, DetailJudul, Profile, Judul } = require("../../models");
 const joi = require("joi");
-const base64 = require('base64-min')
-const fs = require('fs')
+const base64 = require("base64-min");
+const fs = require("fs");
 
 exports.getMyJudul = async (req, res) => {
   try {
@@ -352,14 +352,16 @@ exports.dospemGetJudul = async (req, res) => {
         },
       });
 
-      const fileBase64 = base64.encodeFile(__dirname + `/files/${getAllJudul[i].judul}`)
+      const fileBase64 = base64.encodeFile(
+        __dirname + `/files/${getAllJudul[i].judul}`
+      );
 
       judulDetails.push({
         ...getAllJudul[i].dataValues,
         judulUrl: process.env.file_url + getAllJudul[i].judul,
         mahasiswa,
         detail,
-        judulBase64 : fileBase64
+        judulBase64: fileBase64,
       });
     }
 
@@ -415,7 +417,7 @@ exports.updateJudulByDospem = async (req, res) => {
         },
         {
           model: Comment,
-          as: "comments"
+          as: "comments",
         },
       ],
     });
@@ -514,19 +516,19 @@ exports.kaprodiGetJudul = async (req, res) => {
     //search judul
     const getJudul = await Judul.findAll({
       include: [
-      {
-        model: DetailJudul,
-      },
-      {
-        model: Comment,
-        as: "comments",
-        include: {
-          model: User,
+        {
+          model: DetailJudul,
+        },
+        {
+          model: Comment,
+          as: "comments",
           include: {
-            model: Profile,
-          }
-        }
-      }
+            model: User,
+            include: {
+              model: Profile,
+            },
+          },
+        },
       ],
       order: [["updatedAt", "DESC"]],
     });
@@ -573,13 +575,15 @@ exports.kaprodiGetJudul = async (req, res) => {
         },
       });
 
-      const fileBase64 = base64.encodeFile(__dirname + `/files/${getAllJudul[i].judul}`)
+      const fileBase64 = base64.encodeFile(
+        __dirname + `/files/${getJudul[i].judul}`
+      );
 
       allDataJudul.push({
         ...getJudul[i].dataValues,
         mahasiswa,
         dospem,
-        judulBase64 : fileBase64
+        judulBase64: fileBase64,
       });
     }
 
@@ -602,7 +606,7 @@ exports.kaprodiGetJudul = async (req, res) => {
       return (
         judul.DetailJudul.dospemStatus == "diterima" &&
         judul.DetailJudul.value != null &&
-        (judul.DetailJudul.score != null)
+        judul.DetailJudul.score != null
       );
     });
 
@@ -652,7 +656,7 @@ exports.kaprodiSetValue = async (req, res) => {
       },
       {
         where: {
-          judulId,
+          id: judulId,
         },
       }
     );
@@ -735,7 +739,7 @@ exports.updateJudulByKaprodi = async (req, res) => {
         },
         {
           model: Comment,
-          as:"comments"
+          as: "comments",
         },
       ],
     });
@@ -807,17 +811,17 @@ exports.updateJudulByKaprodi = async (req, res) => {
       message: "Server Error",
     });
   }
-}
+};
 
 exports.downloadJudul = (req, res) => {
   try {
-    const {filename} = req.params
+    const { filename } = req.params;
 
-    const fileBase64 = base64.encodeFile(__dirname + `/files/${filename}`)
+    const fileBase64 = base64.encodeFile(__dirname + `/files/${filename}`);
 
     res.send({
-      data: fileBase64
-    })
+      data: fileBase64,
+    });
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -825,7 +829,7 @@ exports.downloadJudul = (req, res) => {
       message: "Server Error",
     });
   }
-}
+};
 
 exports.getJudulDetail = async (req, res) => {
   try {
@@ -841,13 +845,13 @@ exports.getJudulDetail = async (req, res) => {
         },
         {
           model: Comment,
-          as:"comments",
+          as: "comments",
           include: {
             model: User,
             include: {
-              model: Profile
-            }
-          }
+              model: Profile,
+            },
+          },
         },
       ],
     });
@@ -860,26 +864,26 @@ exports.getJudulDetail = async (req, res) => {
 
     const mahasiswa = await User.findOne({
       where: {
-        id: judul.userId
+        id: judul.userId,
       },
-      attributes:{
-        exclude: ["password"]
+      attributes: {
+        exclude: ["password"],
       },
       include: {
-        model: Profile
-      }
+        model: Profile,
+      },
     });
 
     const dospem = await User.findOne({
       where: {
-        id: judul.dospemId
+        id: judul.dospemId,
       },
-      attributes:{
-        exclude: ["password"]
+      attributes: {
+        exclude: ["password"],
       },
       include: {
-        model: Profile
-      }
+        model: Profile,
+      },
     });
 
     res.send({
@@ -888,11 +892,10 @@ exports.getJudulDetail = async (req, res) => {
         judul: {
           ...judul.dataValues,
           mahasiswa,
-          dospem
-        }
-      }
-    })
-
+          dospem,
+        },
+      },
+    });
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -900,25 +903,25 @@ exports.getJudulDetail = async (req, res) => {
       message: "Server Error",
     });
   }
-}
+};
 
 exports.baakGetJudul = async (req, res) => {
   try {
     const getJudul = await Judul.findAll({
       include: [
-      {
-        model: DetailJudul,
-      },
-      {
-        model: Comment,
-        as: "comments",
-        include: {
-          model: User,
+        {
+          model: DetailJudul,
+        },
+        {
+          model: Comment,
+          as: "comments",
           include: {
-            model: Profile,
-          }
-        }
-      }
+            model: User,
+            include: {
+              model: Profile,
+            },
+          },
+        },
       ],
       order: [["updatedAt", "DESC"]],
     });
@@ -931,12 +934,27 @@ exports.baakGetJudul = async (req, res) => {
       });
     }
 
+    const judulFilter = getJudul.filter(
+      (item) =>
+        item.DetailJudul.dospemStatus == "diterima" &&
+        item.DetailJudul.kaprodiStatus == "diterima"
+    );
+
+    if (judulFilter.length == 0) {
+      return res.send({
+        status: "Success",
+        data: {
+          judul: judulFilter,
+        },
+      });
+    }
+
     let allDataJudul = [];
 
-    for (let i = 0; i < getJudul.length; i++) {
+    for (let i = 0; i < judulFilter.length; i++) {
       const mahasiswa = await User.findOne({
         where: {
-          id: getJudul[i].userId,
+          id: judulFilter[i].userId,
         },
         include: {
           model: Profile,
@@ -948,7 +966,7 @@ exports.baakGetJudul = async (req, res) => {
 
       const dospem = await User.findOne({
         where: {
-          id: getJudul[i].dospemId,
+          id: judulFilter[i].dospemId,
         },
         include: [
           {
@@ -965,22 +983,24 @@ exports.baakGetJudul = async (req, res) => {
         },
       });
 
-      const fileBase64 = base64.encodeFile(__dirname + `/files/${getJudul[i].judul}`)
+      const fileBase64 = base64.encodeFile(
+        __dirname + `/files/${judulFilter[i].judul}`
+      );
 
       allDataJudul.push({
-        ...getJudul[i].dataValues,
+        ...judulFilter[i].dataValues,
         mahasiswa,
         dospem,
-        judulBase64 : fileBase64
+        judulBase64: fileBase64,
       });
     }
 
     res.send({
       status: "Success",
       data: {
-        judul: allDataJudul
-      }
-    })
+        judul: allDataJudul,
+      },
+    });
   } catch (error) {
     console.log(error);
     res.status(500).send({
@@ -988,4 +1008,4 @@ exports.baakGetJudul = async (req, res) => {
       message: "Server Error",
     });
   }
-}
+};

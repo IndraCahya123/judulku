@@ -11,7 +11,7 @@ import Response from "../Response";
 
 function JudulWithScoreKaprodiTable(props) {
   const { dataJudul, setChangeForm, changeForm } = props;
-  const date = new Date(); console.log(dataJudul);
+  const date = new Date();
   return (
     <>
       <div className="d-flex flex-column" style={{ marginTop: 25 }}>
@@ -73,7 +73,8 @@ function JudulWithScoreKaprodiTable(props) {
                         }
                         disabled={
                           item.DetailJudul.kaprodiStatus == null ||
-                          item.DetailJudul.kaprodiStatus === "diterima"
+                          item.DetailJudul.kaprodiStatus === "diterima" ||
+                          item.DetailJudul.kaprodiStatus === "ditolak"
                             ? true
                             : false
                         }
@@ -111,7 +112,7 @@ function JudulWithScoreKaprodiTable(props) {
                           })
                         }
                         disabled={
-                          item.DetailJudul.kaprodiStatus === "diterima"
+                          item.DetailJudul.kaprodiStatus === "diterima" || item.DetailJudul.kaprodiStatus === "ditolak"
                             ? true
                             : false
                         }
@@ -140,7 +141,7 @@ const SystemResult = (props) => {
           padding: "3px 5px",
           borderRadius: "5px",
           fontSize: 10,
-          color: "#fff",
+          color: "#000",
         }}
         className="bg-warning"
       >
