@@ -38,7 +38,28 @@ function PenilaianForm(props) {
     setForm(tempForm);
   };
 
-  const options = [1, 2, 3, 4, 5];
+  const options = [
+    {
+      value: 1,
+      desc : '(Sangat Lama)'
+    },
+    {
+      value: 2,
+      desc : '(Lama)'
+    },
+    {
+      value: 3,
+      desc : '(Cukup Baru)'
+    },
+    {
+      value: 4,
+      desc : '(Baru)'
+    },
+    {
+      value: 5,
+      desc : '(Sangat Baru)'
+    },
+  ];
   console.log(dataDetailJudul);
 
   const setJudulValue = useMutation("KaprodiSetJudulValueCache", async () => {
@@ -97,7 +118,7 @@ function PenilaianForm(props) {
             ? "load.."
             : data.criteria.map((item, index) => {
                 return (
-                  <Form.Row>
+                  <Form.Row className="mb-4">
                     <Form.Label>{item.name}</Form.Label>
                     <Form.Control
                       as="select"
@@ -111,7 +132,7 @@ function PenilaianForm(props) {
                       {options.map((option) => {
                         return (
                           <>
-                            <option selected={isEdit ? (option == form[`kriteria${index}`].value ? true : false) : false} value={option}>{option}</option>
+                            <option selected={isEdit ? (option.value == form[`kriteria${index}`].value ? true : false) : false} value={option.value}>{option.value + ' ' + option.desc}</option>
                           </>
                         );
                       })}
